@@ -1,0 +1,32 @@
+using System;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("=====閏年判斷=====");
+            Console.WriteLine("輸入西元年分：");
+            int year;
+            year = int.Parse(Console.ReadLine()); //讀入年分。
+            if (year % 4 != 0)
+            {
+                Console.WriteLine("該年為平年。");
+            }
+            else
+            {
+                if (year % 100 != 0)
+                {
+                    Console.WriteLine("該年為閏年。");
+                }
+                else
+                {
+                    if (year % 400 != 0) Console.WriteLine("該年為平年。");
+                    else Console.WriteLine("該年為閏年。");
+                }
+            }
+            Console.ReadKey(); //System Pause。
+        }
+    }
+}
