@@ -1,0 +1,59 @@
+using System;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("=====日期合理性檢驗=====");
+            Console.WriteLine("輸入西元年分：");
+            int year;
+            year = int.Parse(Console.ReadLine()); //讀入年分。
+            Console.WriteLine("輸入月分：");
+            int month;
+            month = int.Parse(Console.ReadLine()); //讀入月分。
+            Console.WriteLine("輸入日期：");
+            int day;
+            day = int.Parse(Console.ReadLine()); //讀入日期。
+            int reference;
+            switch (month) //Switch Case格式：switch(變數名稱)。
+            {
+                case 1: //Case格式：case 變數值，字元則加單引號。
+                case 3:
+                case 5:
+                case 7:
+                case 8:
+                case 10:
+                case 12:
+                    reference = 31;
+                    break; //結束此Switch Case。
+                case 4:
+                case 6:
+                case 9:
+                case 11:
+                    reference = 30;
+                    break;
+                case 2: //2月需判讀平閏年。
+                    if (year % 4 != 0) reference = 28;
+                    else
+                    {
+                        if (year % 100 != 0) reference = 29;
+                        else
+                        {
+                            if (year % 400 != 0) reference = 28;
+                            else reference = 29;
+                        }
+                    }
+                    break;
+                default: //不符合以上所有Case。
+                    Console.WriteLine("False.");
+                    goto End;
+            }
+            if(reference >= day) Console.WriteLine("True.");
+            else Console.WriteLine("False.");
+            End:;
+            Console.ReadKey(); //System Pause。
+        }
+    }
+}
