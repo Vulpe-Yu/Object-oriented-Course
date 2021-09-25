@@ -1,0 +1,36 @@
+using System;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("=====三位數阿姆斯壯數=====");
+            int counter = 100; //計數器。
+            int reference; //計算值。
+            for (int a = 1; a <= 9; a++) //百位。
+            {
+                for (int b = 0; b <= 9; b++) //十位。
+                {
+                    for(int c = 0; c <= 9; c++) //個位。
+                    {
+                        reference = a * a * a + b * b * b + c * c * c;
+                        if (reference == counter) //符合定義，印出。
+                        {
+                            Console.WriteLine("{0}\t", counter);
+                            counter++;
+                        }
+                        else //不符定義，繼續下一迴圈。
+                        {
+                            counter++;
+                            continue;
+                        }
+                    }
+                }
+            
+            }
+            Console.ReadKey(); //System Pause。
+        }
+    }
+}
