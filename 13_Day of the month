@@ -6,7 +6,7 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("=====閏年判斷=====");
+            Console.WriteLine("=====月份判讀=====");
             Console.WriteLine("輸入西元年分：");
             int year;
             year = int.Parse(Console.ReadLine()); //讀入年分。
