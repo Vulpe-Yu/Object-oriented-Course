@@ -1,0 +1,52 @@
+using System;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("=====閏年判斷=====");
+            Console.WriteLine("輸入西元年分：");
+            int year;
+            year = int.Parse(Console.ReadLine()); //讀入年分。
+            Console.WriteLine("輸入月分：");
+            int month;
+            month = int.Parse(Console.ReadLine()); //讀入月分。
+            switch (month) //Switch Case格式：switch(變數名稱)。
+            {
+                case 1: //Case格式：case 變數值，字元則加單引號。
+                case 3:
+                case 5:
+                case 7:
+                case 8:
+                case 10:
+                case 12:
+                    Console.WriteLine("該月有31天。");
+                    break; //結束此Switch Case。
+                case 4:
+                case 6:
+                case 9:
+                case 11:
+                    Console.WriteLine("該月有30天。");
+                    break;
+                case 2: //2月需判讀平閏年。
+                    if (year % 4 != 0) Console.WriteLine("該月有28天。");                    
+                    else
+                    {
+                        if (year % 100 != 0) Console.WriteLine("該月有29天。");
+                        else
+                        {
+                            if (year % 400 != 0) Console.WriteLine("該月有28天。");
+                            else Console.WriteLine("該月有29天。");
+                        }
+                    }
+                    break;
+                default: //不符合以上所有Case。
+                    Console.WriteLine("Input Error.");
+                    break;
+            }
+            Console.ReadKey(); //System Pause。
+        }
+    }
+}
