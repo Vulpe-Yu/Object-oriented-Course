@@ -1,0 +1,170 @@
+using System;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("=====兩日期間隔天數====="); //標題。
+
+            Console.WriteLine("輸入第一個年分："); //讀入第一日期。
+            int year1;
+            year1 = int.Parse(Console.ReadLine());
+            Console.WriteLine("輸入月分：");
+            int month1;
+            month1 = int.Parse(Console.ReadLine());
+            Console.WriteLine("輸入日期：");
+            int day1;
+            day1 = int.Parse(Console.ReadLine());
+
+            Console.WriteLine("輸入第二個年分："); //讀入第二日期。
+            int year2;
+            year2 = int.Parse(Console.ReadLine());
+            Console.WriteLine("輸入月分：");
+            int month2;
+            month2 = int.Parse(Console.ReadLine());
+            Console.WriteLine("輸入日期：");
+            int day2;
+            day2 = int.Parse(Console.ReadLine());
+
+            int error; //判讀日期合理性。
+            error = Error(year1, month1, day1) + Error(year2, month2, day2);
+
+            int answer; //計算結果。
+            if(Days(year1, month1, day1) >= Days(year2, month2, day2))
+            answer = Days(year1, month1, day1) - Days(year2, month2, day2) - 1;
+            else answer = Days(year2, month2, day2) - Days(year1, month1, day1) - 1;
+            if (answer < 0) answer = 0;
+
+            if(error == 0) //輸出結果。
+            Console.WriteLine("間隔日數：{0}天", answer);
+            else Console.WriteLine("不合理日期。");
+            Console.ReadKey(); //System Pause。
+        }
+
+        static int Error(int year, int month, int day) //副函式宣告，判讀日期合理性。
+        {
+            int Error;
+            int reference;
+            switch (month) //Switch Case格式：switch(變數名稱)。
+            {
+                case 1: //Case格式：case 變數值，字元則加單引號。
+                case 3:
+                case 5:
+                case 7:
+                case 8:
+                case 10:
+                case 12:
+                    reference = 31;
+                    break; //結束此Switch Case。
+                case 4:
+                case 6:
+                case 9:
+                case 11:
+                    reference = 30;
+                    break;
+                case 2: //2月需判讀平閏年。
+                    if (year % 4 != 0) reference = 28;
+                    else
+                    {
+                        if (year % 100 != 0) reference = 29;
+                        else
+                        {
+                            if (year % 400 != 0) reference = 28;
+                            else reference = 29;
+                        }
+                    }
+                    break;
+                default: //不符合以上所有Case。
+                    reference = 0;
+                    break;
+            }
+            if (reference >= day) Error = 0;
+            else Error = 1;
+            return Error;
+        }
+
+        static int Days(int year, int month, int day) //副函式宣告，計算累計日數。
+        {
+            int a; //第一日期由0001/01/01累計天數。
+            a = (year - 1) * 365;
+            int leap1 = 0; //閏年誤差計算。
+            if (month <= 2) //小於等於2月，不計本年。
+            {
+                for (int i = 0; i < year; i++)
+                {
+                    if (i % 4 != 0) continue;
+                    else
+                    {
+                        if (i % 100 != 0) leap1++;
+                        else
+                        {
+                            if (i % 400 != 0) continue;
+                            else leap1++;
+                        }
+                    }
+                }
+            }
+            else //大於等於2月，計入本年。
+            {
+                for (int i = 0; i <= year; i++)
+                {
+                    if (i % 4 != 0) continue;
+                    else
+                    {
+                        if (i % 100 != 0) leap1++;
+                        else
+                        {
+                            if (i % 400 != 0) continue;
+                            else leap1++;
+                        }
+                    }
+                }
+            }
+            a = a + leap1; //後續計算2月皆視為28天。
+            switch (month) //計算當年整月日期。
+            {
+                case 1:
+                    a = a + 0;
+                    break;
+                case 2:
+                    a = a + 31;
+                    break;
+                case 3:
+                    a = a + 59;
+                    break;
+                case 4:
+                    a = a + 90;
+                    break;
+                case 5:
+                    a = a + 120;
+                    break;
+                case 6:
+                    a = a + 151;
+                    break;
+                case 7:
+                    a = a + 181;
+                    break;
+                case 8:
+                    a = a + 212;
+                    break;
+                case 9:
+                    a = a + 243;
+                    break;
+                case 10:
+                    a = a + 273;
+                    break;
+                case 11:
+                    a = a + 304;
+                    break;
+                case 12:
+                    a = a + 334;
+                    break;
+            }
+            a = a + day; //計算餘下天數。
+            return a;
+        }
+
+    }
+}
