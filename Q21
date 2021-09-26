@@ -1,0 +1,69 @@
+using System;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("=====物件導向Quiz2====="); //標題。
+            Console.WriteLine("判讀起點：1");
+            Console.WriteLine("輸入判讀終點："); //讀入指定範圍。
+            int n;
+            n = int.Parse(Console.ReadLine());
+            if (n <= 0)
+            {
+                Console.WriteLine("Input Error");
+                goto End;
+            }
+            Console.WriteLine("範圍內符合條件之數字如下：");
+            int a, b, c, d, e, f;
+            int counter;
+            counter = 0;
+            for (a = 0; a <= 9; a++)
+            {
+                for (b = 0; b <= 9; b++)
+                {
+                    for (c = 0; c <= 9; c++)
+                    {
+                        for (d = 0; d <= 9; d++)
+                        {
+                            for (e = 0; e <= 9; e++)
+                            {
+                                for (f = 0; f <= 9; f++)
+                                {
+                                    if (counter == 0)
+                                    {
+                                        counter++;
+                                        continue;
+                                    }
+                                    if (counter > n) break;
+                                    if (Triple(counter) == counter)
+                                    {
+                                        Console.WriteLine("{0}", counter);
+                                        counter++;
+                                    }
+                                    else counter++;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+        End:;
+            Console.ReadKey(); //System Pause。
+        }
+
+        static int Triple(int counter) //副函式宣告，計算值結果。
+        {
+            int A, B, C;
+            A = counter / 10000;
+            B = counter / 100 - 100 * A;
+            C = counter - 10000 * A - 100 * B;
+            int result;
+            result = A * A * A + B * B * B + C * C * C;
+            return result;
+        }
+    }
+}
