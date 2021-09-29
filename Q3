@@ -1,0 +1,140 @@
+using System;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Triangle A = new Triangle();            
+            string S;
+            string[] Temp; //字串陣列宣告。
+            Temp = new string[2]; //配置記憶體及宣告長度。
+            char Keep;
+        Repeat:; //重複執行點。
+            Console.WriteLine("=====三角形特性分析====="); //標題，WriteLine自動換行。
+            Console.WriteLine("輸入座標點。(以空格分隔)");
+            Console.Write("(X1, Y1) = "); //讀入座標，Write不換行。
+            S = Console.ReadLine(); //讀入字串。            
+            Temp = S.Split(' '); //以空格分割讀入字串。
+            A.x1 = double.Parse(Temp[0]); //進行資料轉換。
+            A.y1 = double.Parse(Temp[1]);
+            Console.Write("(X2, Y2) = ");
+            S = Console.ReadLine(); //讀入字串。
+            Temp = S.Split(' '); //分割字串。
+            A.x2 = double.Parse(Temp[0]);
+            A.y2 = double.Parse(Temp[1]);
+            Console.Write("(X3, Y3) = ");
+            S = Console.ReadLine();
+            Temp = S.Split(' ');
+            A.x3 = double.Parse(Temp[0]);
+            A.y3 = double.Parse(Temp[1]); //讀入結束。
+            if (A.Error(A.x1, A.y1, A.x2, A.y2, A.x3, A.y3)) //錯誤判讀。
+            {
+                Console.WriteLine("此三點無法構成三角形。");
+                goto GoOn;
+            }
+            A.l1 = A.Length(A.x1, A.y1, A.x2, A.y2);
+            A.l2 = A.Length(A.x2, A.y2, A.x3, A.y3);
+            A.l3 = A.Length(A.x1, A.y1, A.x3, A.y3); //邊長計算。
+            A.area = A.Area(A.l1, A.l2, A.l3); //面積計算。
+            A.a1 = A.Angle(A.l1, A.l2, A.l3);
+            A.a2 = A.Angle(A.l2, A.l3, A.l1);
+            A.a3 = A.Angle(A.l3, A.l1, A.l2); //角度計算。
+            A.radius = A.OuterRadius(A.l1, A.l2, A.l3, A.area); //半徑計算。
+            Console.WriteLine("周長 = {0}", A.l1 + A.l2 + A.l3);
+            Console.WriteLine("面積 = {0}", A.area);
+            Console.WriteLine("外接圓半徑 = {0}", A.radius);
+            if (A.Right(A.a1, A.a2, A.a3)) Console.WriteLine("是直角三角形。");
+            else Console.WriteLine("非直角三角形。");
+        GoOn:;
+            Console.WriteLine("再次進行驗證？(是：Y / 否：N)");
+            Keep = char.Parse(Console.ReadLine());
+            switch (Keep)
+            {
+                case 'Y':
+                    Console.Clear();
+                    goto Repeat;
+                case 'N':
+                    break;
+                default:
+                    Console.WriteLine("Error, ending program.");
+                    break;
+            }
+        }
+
+        class Triangle //類別宣告。
+        {
+            public double x1;
+            public double y1;
+            public double x2;
+            public double y2;
+            public double x3;
+            public double y3; //座標點。
+            public double l1;
+            public double l2;
+            public double l3; //三邊長。
+            public double a1;
+            public double a2;
+            public double a3; //三角度。
+            public double area; //面積。
+            public double radius; //外接圓半徑。
+
+            public bool Error(double x1, double y1, double x2, double y2, double x3, double y3) //成立判別。
+            {
+                double A, B;
+                A = (y2 - y1) / (x2 - x1);
+                B = (y3 - y1) / (x3 - x1);
+                if (A == B) return true;
+                else return false;
+            }
+
+            public double Length(double a, double b, double x, double y) //長度計算。
+            {
+                double length;
+                double A, B;
+                A = a - x;
+                B = b - y;
+                double s;
+                s = A * A + B * B;
+                length = Math.Sqrt(s);
+                return length;
+            }
+
+            public double Area(double l1, double l2, double l3) //面積計算，海龍公式。
+            {
+                double area;
+                double s;
+                s = (l1 + l2 + l3) / 2;
+                area = s * (s - l1) * (s - l2) * (s - l3);
+                area = Math.Sqrt(area);
+                return area;
+            }
+
+            public double Angle(double l1, double l2, double l3) //角度計算，餘弦定理。
+            {
+                double angle;
+                double s;
+                s = l3 * l3 + l2 * l2 - l1 * l1;
+                s = s / (2 * l2 * l3);
+                angle = Math.Acos(s);
+                return angle;
+            }
+
+            public double OuterRadius(double l1, double l2, double l3, double area) //角度計算，餘弦定理。
+            {
+                double radius;
+                double s;
+                s = l3 * l2 * l1 / 4;
+                radius = s / area;
+                return radius;
+            }
+
+            public bool Right(double a1, double a2, double a3) //直角判別。
+            {
+                if (a1 == Math.PI / 2 || a2 == Math.PI / 2 || a3 == Math.PI / 2) return true;
+                else return false;
+            }
+        }
+    }
+}
