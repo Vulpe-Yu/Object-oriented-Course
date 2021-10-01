@@ -1,0 +1,244 @@
+using System;
+
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Triangle A = new Triangle();
+            string S;
+            string[] Temp; //字串陣列宣告。
+            Temp = new string[2]; //配置記憶體及宣告長度。
+            char Keep;
+        Repeat:; //重複點。
+            Console.WriteLine("=====四邊形特性分析====="); //標題，WriteLine自動換行。
+            Console.WriteLine("輸入座標點。(須依順序輸入，以空格分隔)");
+            Console.Write("(X1, Y1) = "); //讀入座標，Write不換行。
+            S = Console.ReadLine(); //讀入字串。            
+            Temp = S.Split(' '); //以空格分割讀入字串。
+            A.x1 = double.Parse(Temp[0]); //進行資料轉換。
+            A.y1 = double.Parse(Temp[1]);
+            Console.Write("(X2, Y2) = ");
+            S = Console.ReadLine(); //讀入字串。
+            Temp = S.Split(' '); //分割字串。
+            A.x2 = double.Parse(Temp[0]);
+            A.y2 = double.Parse(Temp[1]);
+            Console.Write("(X3, Y3) = ");
+            S = Console.ReadLine();
+            Temp = S.Split(' ');
+            A.x3 = double.Parse(Temp[0]);
+            A.y3 = double.Parse(Temp[1]);
+            Console.Write("(X4, Y4) = ");
+            S = Console.ReadLine();
+            Temp = S.Split(' ');
+            A.x4 = double.Parse(Temp[0]);
+            A.y4 = double.Parse(Temp[1]);//讀入結束。
+            A.l12 = A.Length(A.x1, A.y1, A.x2, A.y2);
+            A.l23 = A.Length(A.x2, A.y2, A.x3, A.y3);
+            A.l34 = A.Length(A.x3, A.y3, A.x4, A.y4);
+            A.l41 = A.Length(A.x4, A.y4, A.x1, A.y1); //邊長計算。
+            A.l13 = A.Length(A.x1, A.y1, A.x3, A.y3);
+            A.l24 = A.Length(A.x2, A.y2, A.x4, A.y4); //對角線計算。
+            A.a1 = A.Angle(A.l12, A.l41, A.l24);
+            A.a2 = A.Angle(A.l12, A.l23, A.l13);
+            A.a3 = A.Angle(A.l23, A.l34, A.l24);
+            A.a4 = A.Angle(A.l34, A.l41, A.l13); //角度計算。
+            A.area = A.Area(A.l12, A.l23, A.l34, A.l41, A.l13); //面積計算。
+            A.s12 = A.Slope(A.x1, A.y1, A.x2, A.y2);
+            A.s23 = A.Slope(A.x2, A.y2, A.x3, A.y3);
+            A.s34 = A.Slope(A.x3, A.y3, A.x4, A.y4);
+            A.s41 = A.Slope(A.x4, A.y4, A.x1, A.y1); //斜率計算。
+            if (A.Square(A.l12, A.l23, A.l34, A.l41, A.a1, A.a2, A.a3, A.a4)) Console.WriteLine("分析結果：正方形");
+            if (A.Rectangle(A.l12, A.l23, A.l34, A.l41, A.a1, A.a2, A.a3, A.a4)) Console.WriteLine("分析結果：長方形");
+            if (A.Diamond(A.l12, A.l23, A.l34, A.l41, A.a1, A.a2, A.a3, A.a4)) Console.WriteLine("分析結果：菱形");
+            if (A.Parallelogram(A.l12, A.l23, A.l34, A.l41, A.a1, A.a2, A.a3, A.a4)) Console.WriteLine("分析結果：平行四邊形");
+            if (A.Kite(A.l12, A.l23, A.l34, A.l41, A.a1, A.a2, A.a3, A.a4)) Console.WriteLine("分析結果：箏形");
+            if (A.Trapezoid(A.s12, A.s23, A.s34, A.s41)) Console.WriteLine("分析結果：梯形");
+            if (A.Irregular(A.l12, A.l23, A.l34, A.l41, A.s12, A.s23, A.s34, A.s41)) Console.WriteLine("分析結果：不規則四邊形");
+            Console.WriteLine("面積 = {0}", A.area);
+            Console.WriteLine("再次進行分析？(是：Y / 否：N)");
+            Keep = char.Parse(Console.ReadLine());
+            switch (Keep)
+            {
+                case 'Y':
+                    Console.Clear();
+                    goto Repeat;
+                case 'N':
+                    break;
+                default:
+                    Console.WriteLine("Error, ending program.");
+                    break;
+            }
+        }
+
+        class Triangle //類別宣告。
+        {
+            public double x1;
+            public double y1;
+            public double x2;
+            public double y2;
+            public double x3;
+            public double y3;
+            public double x4;
+            public double y4; //座標點。
+            public double l12;
+            public double l23;
+            public double l34;
+            public double l41; //四邊長。
+            public double l13;
+            public double l24; //雙對角線。
+            public double a1;
+            public double a2;
+            public double a3;
+            public double a4; //四角度。
+            public double area; //面積。
+            public double s12;
+            public double s23;
+            public double s34;
+            public double s41; //四斜率。
+
+            public double Length(double a, double b, double x, double y) //長度計算。
+            {
+                double length;
+                double A, B;
+                A = a - x;
+                B = b - y;
+                double s;
+                s = A * A + B * B;
+                length = Math.Sqrt(s);
+                return length;
+            }
+
+            public double Area(double l1, double l2, double l3, double l4, double X1) //面積計算，海龍公式。
+            {
+                double area;
+                double a, b, s1, s2;
+                s1 = (l1 + l2 + X1) / 2;
+                a = s1 * (s1 - l1) * (s1 - l2) * (s1 - X1);
+                a = Math.Sqrt(a);
+                s2 = (l3 + l4 + X1) / 2;
+                b = s2 * (s2 - l3) * (s2 - l4) * (s2 - X1);
+                b = Math.Sqrt(b);
+                area = a + b;
+                return area;
+            }
+
+            public double Angle(double l1, double l2, double lX) //角度計算，餘弦定理。
+            {
+                double angle;
+                double s;
+                s = l1 * l1 + l2 * l2 - lX * lX;
+                s = s / (2 * l1 * l2);
+                angle = Math.Acos(s);
+                return angle;
+            }
+
+            public double Slope(double a, double b, double x, double y) //斜率計算。
+            {
+                double slope;
+                double A, B;
+                A = a - x;
+                B = b - y;
+                double s = 1 / A;
+                if (A == 0) return s; //避免正負無窮大異號問題
+                else slope = B / A;
+                return slope;
+            }
+
+            public bool Square(double l1, double l2, double l3, double l4, double a1, double a2, double a3, double a4) //正方形判別。
+            {
+                double degree90 = 1.5707963267948968;
+                bool len;
+                if (l1 == l2 && l2 == l3 && l3 == l4) len = true;
+                else len = false;
+                if (a1 == degree90 && a2 == degree90 && a3 == degree90 && a4 == degree90 && len) return true;
+                else return false;
+            }
+
+            public bool Rectangle(double l1, double l2, double l3, double l4, double a1, double a2, double a3, double a4) //長方形判別。
+            {
+                double degree90 = 1.5707963267948968;
+                bool len;
+                if (l1 == l3 && l2 == l4 && l1 != l2) len = true;
+                else len = false;
+                bool angle;
+                if (a1 == degree90 && a2 == degree90 && a3 == degree90 && a4 == degree90) angle = true;
+                else angle = false;
+                if (angle && len) return true;
+                else return false;
+            }
+
+            public bool Diamond(double l1, double l2, double l3, double l4, double a1, double a2, double a3, double a4) //菱形判別。
+            {
+                bool len;
+                if (l1 == l2 && l2 == l3 && l3 == l4) len = true;
+                else len = false;
+                bool angle;
+                if (a1 == a3 && a2 == a4 && a1 != a2) angle = true;
+                else angle = false;
+                if (angle && len) return true;
+                else return false;
+            }
+
+            public bool Parallelogram(double l1, double l2, double l3, double l4, double a1, double a2, double a3, double a4) //平行四邊形判別。
+            {
+                bool len;
+                if (l1 == l3 && l2 == l4 && l1 != l2) len = true;
+                else len = false;
+                bool angle;
+                if (a1 == a3 && a2 == a4 && a1 != a2) angle = true;
+                else angle = false;
+                if (angle && len) return true;
+                else return false;
+            }
+
+            public bool Trapezoid(double s1, double s2, double s3, double s4) //梯形判別。
+            {
+                bool true1;
+                if (s1 == s3 && s2 != s4) true1 = true;
+                else true1 = false;
+                bool true2;
+                if (s2 == s4 && s1 != s3) true2 = true;
+                else true2 = false;
+                if (true1 || true2) return true;
+                else return false;
+            }
+
+            public bool Kite(double l1, double l2, double l3, double l4, double a1, double a2, double a3, double a4) //箏形判別。
+            {
+                bool len1;
+                if (l1 == l2 && l3 == l4 && l1 != l3) len1 = true;
+                else len1 = false;
+                bool angle1;
+                if (a1 == a3) angle1 = true;
+                else angle1 = false;
+                bool len2;
+                if (l2 == l3 && l1 == l4 && l1 != l3) len2 = true;
+                else len2 = false;
+                bool angle2;
+                if (a2 == a4) angle2 = true;
+                else angle2 = false;
+                bool true1 = len1 & angle1;
+                bool true2 = len2 & angle2;
+                if (true1 || true2) return true;
+                else return false;
+            }
+
+            public bool Irregular(double l1, double l2, double l3, double l4, double s1, double s2, double s3, double s4) //不規則四邊形判別。
+            {
+                bool slope; //斜率皆不同。
+                if (s1 != s2 && s1 != s3 && s1 != s4 && s2 != s3 && s2 != s4 && s3 != s4) slope = true;
+                else slope = false;
+                bool len1;
+                if (l1 == l2 && l3 == l4 && l1 != l3) len1 = false; //是箏形為False。
+                else len1 = true;
+                bool len2;
+                if (l2 == l3 && l1 == l4 && l1 != l3) len2 = false;
+                else len2 = true;
+                if (slope && len1 && len2) return true;
+                else return false;
+            }
+        }
+    }
+}
