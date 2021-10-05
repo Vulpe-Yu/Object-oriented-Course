@@ -1,0 +1,429 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CW1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            int Choose;
+        MainProgram:;
+            Console.Clear();
+            Console.WriteLine("=====CW1主選單=====");
+            Console.WriteLine("1.列出所有三位數阿姆斯壯數");
+            Console.WriteLine("2.輸入西元年分判斷平閏年");
+            Console.WriteLine("3.輸入年月輸出該月天數");
+            Console.WriteLine("4.輸入年月日判斷週幾");
+            Console.WriteLine("5.日期合理性判斷");
+            Console.WriteLine("6.兩日期間隔日數");
+            Console.WriteLine("7.退出程序");
+            Console.Write("功能選擇(輸入數字1～7)：");
+            Choose = int.Parse(Console.ReadLine());
+            switch (Choose)
+            {
+                case 1:
+                    Console.Clear();
+                    Console.WriteLine("=====三位數阿姆斯壯數====="); //標題。
+                    int counter = 100; //計數器。
+                    int reference1; //計算值。
+                    for (int a = 1; a <= 9; a++) //百位。
+                    {
+                        for (int b = 0; b <= 9; b++) //十位。
+                        {
+                            for (int c = 0; c <= 9; c++) //個位。
+                            {
+                                reference1 = a * a * a + b * b * b + c * c * c;
+                                if (reference1 == counter) //符合定義，印出。
+                                {
+                                    Console.WriteLine("{0}", counter);
+                                    counter++;
+                                }
+                                else //不符定義，繼續下一迴圈。
+                                {
+                                    counter++;
+                                    continue;
+                                }
+                            }
+                        }
+
+                    }
+                    Console.WriteLine(" ");
+                    Console.WriteLine("1.回主選單");
+                    Console.WriteLine("2.退出程序");
+                    Console.Write("功能選擇(輸入數字1～2)：");
+                    Choose = int.Parse(Console.ReadLine());
+                    if (Choose == 1) goto MainProgram;
+                    else if (Choose == 2) goto End;
+                    else
+                    {
+                        Console.WriteLine("輸入錯誤，自動結束程序。");
+                        goto End;
+                    }
+                case 2:
+                LeapYear:;
+                    Console.Clear();
+                    Console.WriteLine("=====閏年判斷=====");
+                    Console.Write("輸入西元年分：");
+                    int year2;
+                    year2 = int.Parse(Console.ReadLine()); //讀入年分。
+                    if (year2 % 4 != 0)
+                    {
+                        Console.WriteLine("該年為平年。");
+                    }
+                    else
+                    {
+                        if (year2 % 100 != 0)
+                        {
+                            Console.WriteLine("該年為閏年。");
+                        }
+                        else
+                        {
+                            if (year2 % 400 != 0) Console.WriteLine("該年為平年。");
+                            else Console.WriteLine("該年為閏年。");
+                        }
+                    }
+                    Console.WriteLine(" ");
+                    Console.WriteLine("1.重新執行此功能");
+                    Console.WriteLine("2.回主選單");
+                    Console.WriteLine("3.退出程序");
+                    Console.Write("功能選擇(輸入數字1～3)：");
+                    Choose = int.Parse(Console.ReadLine());
+                    if (Choose == 1) goto LeapYear;
+                    if (Choose == 2) goto MainProgram;
+                    else if (Choose == 3) goto End;
+                    else
+                    {
+                        Console.WriteLine("輸入錯誤，自動結束程序。");
+                        goto End;
+                    }
+                case 3:
+                MonthDays:;
+                    Console.Clear();
+                    Console.WriteLine("=====月份判讀=====");
+                    Console.Write("輸入西元年分：");
+                    int year3;
+                    year3 = int.Parse(Console.ReadLine()); //讀入年分。
+                    Console.Write("輸入月分：");
+                    int month3;
+                    month3 = int.Parse(Console.ReadLine()); //讀入月分。
+                    switch (month3) //Switch Case格式：switch(變數名稱)。
+                    {
+                        case 1: //Case格式：case 變數值，字元則加單引號。
+                        case 3:
+                        case 5:
+                        case 7:
+                        case 8:
+                        case 10:
+                        case 12:
+                            Console.WriteLine("該月有31天。");
+                            break; //結束此Switch Case。
+                        case 4:
+                        case 6:
+                        case 9:
+                        case 11:
+                            Console.WriteLine("該月有30天。");
+                            break;
+                        case 2: //2月需判讀平閏年。
+                            if (year3 % 4 != 0) Console.WriteLine("該月有28天。");
+                            else
+                            {
+                                if (year3 % 100 != 0) Console.WriteLine("該月有29天。");
+                                else
+                                {
+                                    if (year3 % 400 != 0) Console.WriteLine("該月有28天。");
+                                    else Console.WriteLine("該月有29天。");
+                                }
+                            }
+                            break;
+                        default: //不符合以上所有Case。
+                            Console.WriteLine("Input Error.");
+                            break;
+                    }
+                    Console.WriteLine(" ");
+                    Console.WriteLine("1.重新執行此功能");
+                    Console.WriteLine("2.回主選單");
+                    Console.WriteLine("3.退出程序");
+                    Console.Write("功能選擇(輸入數字1～3)：");
+                    Choose = int.Parse(Console.ReadLine());
+                    if (Choose == 1) goto MonthDays;
+                    if (Choose == 2) goto MainProgram;
+                    else if (Choose == 3) goto End;
+                    else
+                    {
+                        Console.WriteLine("輸入錯誤，自動結束程序。");
+                        goto End;
+                    }
+                case 4:
+                Weekdays:;
+                    Console.Clear();
+                    Console.WriteLine("=====星期判讀=====");
+                    Console.Write("輸入西元年月日(以空格分割)：");
+                    string S4;
+                    string[] Temp4;
+                    Temp4 = new string[3];
+                    S4 = Console.ReadLine();
+                    Temp4 = S4.Split(' ');
+                    int year4, month4, day4;
+                    year4 = int.Parse(Temp4[0]);
+                    month4 = int.Parse(Temp4[1]);
+                    day4 = int.Parse(Temp4[2]);
+                    if (Error(year4, month4, day4))
+                    {
+                        int answer;
+                        answer = Days(year4, month4, day4) % 7;
+                        switch (answer)
+                        {
+                            case 0:
+                                Console.WriteLine("Saturday");
+                                break;
+                            case 1:
+                                Console.WriteLine("Sunday");
+                                break;
+                            case 2:
+                                Console.WriteLine("Monday");
+                                break;
+                            case 3:
+                                Console.WriteLine("Tuesday");
+                                break;
+                            case 4:
+                                Console.WriteLine("Wednesday");
+                                break;
+                            case 5:
+                                Console.WriteLine("Thursday");
+                                break;
+                            case 6:
+                                Console.WriteLine("Friday");
+                                break;
+                            default:
+                                Console.WriteLine("Error");
+                                break;
+                        }
+                    }
+                    else Console.WriteLine("日期不合理。");
+                    Console.WriteLine(" ");
+                    Console.WriteLine("1.重新執行此功能");
+                    Console.WriteLine("2.回主選單");
+                    Console.WriteLine("3.退出程序");
+                    Console.Write("功能選擇(輸入數字1～3)：");
+                    Choose = int.Parse(Console.ReadLine());
+                    if (Choose == 1) goto Weekdays;
+                    if (Choose == 2) goto MainProgram;
+                    else if (Choose == 3) goto End;
+                    else
+                    {
+                        Console.WriteLine("輸入錯誤，自動結束程序。");
+                        goto End;
+                    }
+                case 5:
+                DateTrue:;
+                    Console.Clear();
+                    Console.WriteLine("=====日期合理性檢驗=====");
+                    Console.Write("輸入西元年月日(以空格分割)：");
+                    string S5;
+                    string[] Temp5;
+                    Temp5 = new string[3];
+                    S5 = Console.ReadLine();
+                    Temp5 = S5.Split(' ');
+                    int year5, month5, day5;
+                    year5 = int.Parse(Temp5[0]);
+                    month5 = int.Parse(Temp5[1]);
+                    day5 = int.Parse(Temp5[2]);
+                    if (Error(year5, month5, day5)) Console.WriteLine("True.");
+                    else Console.WriteLine("False.");
+                    Console.WriteLine(" ");
+                    Console.WriteLine("1.重新執行此功能");
+                    Console.WriteLine("2.回主選單");
+                    Console.WriteLine("3.退出程序");
+                    Console.Write("功能選擇(輸入數字1～3)：");
+                    Choose = int.Parse(Console.ReadLine());
+                    if (Choose == 1) goto DateTrue;
+                    if (Choose == 2) goto MainProgram;
+                    else if (Choose == 3) goto End;
+                    else
+                    {
+                        Console.WriteLine("輸入錯誤，自動結束程序。");
+                        goto End;
+                    }
+                case 6:
+                Days:;
+                    Console.Clear();
+                    Console.WriteLine("=====兩日期間隔天數=====");
+                    string S6;
+                    string[] Temp6;
+                    Temp6 = new string[3];
+                    Console.Write("輸入第一個西元年月日(以空格分割)：");
+                    S6 = Console.ReadLine();
+                    Temp6 = S6.Split(' ');
+                    int year61, month61, day61;
+                    year61 = int.Parse(Temp6[0]);
+                    month61 = int.Parse(Temp6[1]);
+                    day61 = int.Parse(Temp6[2]);
+                    Console.Write("輸入第二個西元年月日(以空格分割)：");
+                    S6 = Console.ReadLine();
+                    Temp6 = S6.Split(' ');
+                    int year62, month62, day62;
+                    year62 = int.Parse(Temp6[0]);
+                    month62 = int.Parse(Temp6[1]);
+                    day62 = int.Parse(Temp6[2]);
+                    if (Error(year61, month61, day61) && Error(year62, month62, day62))
+                    {
+                        int answer6; //計算結果。
+                        if (Days(year61, month61, day61) >= Days(year62, month62, day62))
+                            answer6 = Days(year61, month61, day61) - Days(year62, month62, day62) - 1;
+                        else answer6 = Days(year62, month62, day62) - Days(year61, month61, day61) - 1;
+                        if (answer6 < 0) answer6 = 0;
+                        Console.WriteLine("間隔日數：{0}天", answer6);
+                    }
+                    else Console.WriteLine("日期不合理。");
+                    Console.WriteLine(" ");
+                    Console.WriteLine("1.重新執行此功能");
+                    Console.WriteLine("2.回主選單");
+                    Console.WriteLine("3.退出程序");
+                    Console.Write("功能選擇(輸入數字1～3)：");
+                    Choose = int.Parse(Console.ReadLine());
+                    if (Choose == 1) goto Days;
+                    if (Choose == 2) goto MainProgram;
+                    else if (Choose == 3) goto End;
+                    else
+                    {
+                        Console.WriteLine("輸入錯誤，自動結束程序。");
+                        goto End;
+                    }
+                case 7:
+                    Console.WriteLine(" ");
+                    Console.WriteLine("程序結束。");
+                    break;
+                default:
+                    Console.WriteLine("輸入錯誤，請重新選擇。");
+                    Console.ReadKey();
+                    goto MainProgram;
+            }
+        End:;
+            Console.ReadKey(); //SystemPause。
+        }
+
+        static bool Error(int year, int month, int day) //副函式宣告，判讀日期合理性。
+        {
+            int reference;
+            switch (month) //Switch Case格式：switch(變數名稱)。
+            {
+                case 1: //Case格式：case 變數值，字元則加單引號。
+                case 3:
+                case 5:
+                case 7:
+                case 8:
+                case 10:
+                case 12:
+                    reference = 31;
+                    break; //結束此Switch Case。
+                case 4:
+                case 6:
+                case 9:
+                case 11:
+                    reference = 30;
+                    break;
+                case 2: //2月需判讀平閏年。
+                    if (year % 4 != 0) reference = 28;
+                    else
+                    {
+                        if (year % 100 != 0) reference = 29;
+                        else
+                        {
+                            if (year % 400 != 0) reference = 28;
+                            else reference = 29;
+                        }
+                    }
+                    break;
+                default: //不符合以上所有Case。
+                    reference = 0;
+                    break;
+            }
+            if (reference >= day) return true;
+            else return false;
+        }
+        static int Days(int year, int month, int day) //副函式宣告，計算累計日數。
+        {
+            int a; //第一日期由0001/01/01累計天數。
+            a = (year - 1) * 365;
+            int leap = 0; //閏年誤差計算。
+            if (month <= 2) //小於等於2月，不計本年。
+            {
+                for (int i = 0; i < year; i++)
+                {
+                    if (i % 4 != 0) continue;
+                    else
+                    {
+                        if (i % 100 != 0) leap++;
+                        else
+                        {
+                            if (i % 400 != 0) continue;
+                            else leap++;
+                        }
+                    }
+                }
+            }
+            else //大於等於2月，計入本年。
+            {
+                for (int i = 0; i <= year; i++)
+                {
+                    if (i % 4 != 0) continue;
+                    else
+                    {
+                        if (i % 100 != 0) leap++;
+                        else
+                        {
+                            if (i % 400 != 0) continue;
+                            else leap++;
+                        }
+                    }
+                }
+            }
+            a = a + leap; //後續計算2月皆視為28天。
+            switch (month) //計算當年整月日期。
+            {
+                case 1:
+                    a = a + 0;
+                    break;
+                case 2:
+                    a = a + 31;
+                    break;
+                case 3:
+                    a = a + 59;
+                    break;
+                case 4:
+                    a = a + 90;
+                    break;
+                case 5:
+                    a = a + 120;
+                    break;
+                case 6:
+                    a = a + 151;
+                    break;
+                case 7:
+                    a = a + 181;
+                    break;
+                case 8:
+                    a = a + 212;
+                    break;
+                case 9:
+                    a = a + 243;
+                    break;
+                case 10:
+                    a = a + 273;
+                    break;
+                case 11:
+                    a = a + 304;
+                    break;
+                case 12:
+                    a = a + 334;
+                    break;
+            }
+            a = a + day; //計算餘下天數。
+            return a;
+        }
+    }
+}
