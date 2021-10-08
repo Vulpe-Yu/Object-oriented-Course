@@ -1,0 +1,88 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Quiz2
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("=====物件導向Quiz2====="); //標題。
+            Console.WriteLine("判讀起點：1");
+            Console.Write("輸入判讀終點："); //讀入指定範圍。
+            int n;
+            n = int.Parse(Console.ReadLine());
+            Console.Write("輸入欲得判讀結果個數：");
+            int result;
+            result = int.Parse(Console.ReadLine());
+            int k;
+            k = result;
+            if (n <= 0 || n > 999999)
+            {
+                Console.WriteLine("Input Error");
+                goto End;
+            }
+            if (result <= 0)
+            {
+                Console.WriteLine("Input Error");
+                goto End;
+            }
+            Console.WriteLine("範圍內符合條件之數字如下：");
+            int a, b, c, d, e, f;
+            int counter;
+            counter = 0;
+            int sum;
+            sum = 0;
+            for (a = 0; a <= 9; a++)
+            {
+                for (b = 0; b <= 9; b++)
+                {
+                    for (c = 0; c <= 9; c++)
+                    {
+                        for (d = 0; d <= 9; d++)
+                        {
+                            for (e = 0; e <= 9; e++)
+                            {
+                                for (f = 0; f <= 9; f++)
+                                {
+                                    if (counter == 0)
+                                    {
+                                        counter++;
+                                        continue;
+                                    }
+                                    if (counter > n) break;
+                                    if (Triple(counter) == counter)
+                                    {
+                                        Console.WriteLine("{0}", counter);
+                                        sum = sum + counter;
+                                        result--;
+                                        if (result == 0) Console.WriteLine("===指定前{0}項結果如上===", k);
+                                        counter++;
+                                    }
+                                    else counter++;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if (result > 0) Console.WriteLine("尚不足{0}項結果", result);
+            Console.WriteLine("範圍內符合條件之數字總和為{0}", sum);
+        End:;
+            Console.ReadKey(); //System Pause。
+        }
+        static int Triple(int counter) //副函式宣告，計算值結果。
+        {
+            int A, B, C;
+            A = counter / 10000;
+            B = counter / 100 - 100 * A;
+            C = counter - 10000 * A - 100 * B;
+            int result;
+            result = A * A * A + B * B * B + C * C * C;
+            return result;
+        }
+    }
+}
