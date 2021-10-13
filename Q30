@@ -121,7 +121,7 @@ namespace ConsoleApp1
                 return angle;
             }
 
-            public double OuterRadius(double l1, double l2, double l3, double area) //角度計算，餘弦定理。
+            public double OuterRadius(double l1, double l2, double l3, double area) //外接圓半徑計算。
             {
                 double radius;
                 double s;
