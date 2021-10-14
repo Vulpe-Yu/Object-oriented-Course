@@ -1,0 +1,272 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CW4
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Quadrilateral Q = new Quadrilateral(); //四邊形。
+            Triangle A = new Triangle(); //分割三角形A。
+            Triangle B = new Triangle(); //分割三角形B。
+
+            //修正錯誤：並未將物件參考設定為物件的執行個體。
+            //需要 New 的物件未建立。
+            //需要參照的物件未參照，或傳回 Nothing。
+            Q.ptArr[0] = new Point();
+            Q.ptArr[1] = new Point();
+            Q.ptArr[2] = new Point();
+            Q.ptArr[3] = new Point();
+            A.ptArr[0] = new Point();
+            A.ptArr[1] = new Point();
+            A.ptArr[2] = new Point();
+            B.ptArr[0] = new Point();
+            B.ptArr[1] = new Point();
+            B.ptArr[2] = new Point();
+
+            string S;
+            string[] Temp; //字串陣列宣告。
+            Temp = new string[2]; //配置記憶體及宣告長度。
+            char Keep;
+        Repeat:; //重複點。
+            Console.WriteLine("=====四邊形特性分析====="); //標題，WriteLine自動換行。
+            Console.WriteLine("輸入座標點。(須依順序輸入，以空格分隔)");
+            Console.Write("(X1, Y1) = "); //讀入座標，Write不換行。
+            S = Console.ReadLine(); //讀入字串。            
+            Temp = S.Split(' '); //以空格分割讀入字串。
+            Q.ptArr[0].xCoord = double.Parse(Temp[0]); //進行資料轉換。
+            Q.ptArr[0].yCoord = double.Parse(Temp[1]);
+            Console.Write("(X2, Y2) = ");
+            S = Console.ReadLine(); //讀入字串。
+            Temp = S.Split(' '); //分割字串。
+            Q.ptArr[1].xCoord = double.Parse(Temp[0]);
+            Q.ptArr[1].yCoord = double.Parse(Temp[1]);
+            Console.Write("(X3, Y3) = ");
+            S = Console.ReadLine();
+            Temp = S.Split(' ');
+            Q.ptArr[2].xCoord = double.Parse(Temp[0]);
+            Q.ptArr[2].yCoord = double.Parse(Temp[1]);
+            Console.Write("(X4, Y4) = ");
+            S = Console.ReadLine();
+            Temp = S.Split(' ');
+            Q.ptArr[3].xCoord = double.Parse(Temp[0]);
+            Q.ptArr[3].yCoord = double.Parse(Temp[1]); //讀入四個座標結束。
+
+            //讀了四個座標。
+
+            A.ptArr[0] = Q.ptArr[0];
+            A.ptArr[1] = Q.ptArr[1];
+            A.ptArr[2] = Q.ptArr[2];
+            B.ptArr[0] = Q.ptArr[2];
+            B.ptArr[1] = Q.ptArr[3];
+            B.ptArr[2] = Q.ptArr[0]; //分割成兩個三角形。
+
+
+
+            A.lenArr[0] = A.ptArr[0].Distance(A.ptArr[1]);
+            A.lenArr[1] = A.ptArr[1].Distance(A.ptArr[2]);
+            A.lenArr[2] = A.ptArr[2].Distance(A.ptArr[0]);
+
+            B.lenArr[0] = B.ptArr[0].Distance(B.ptArr[1]);
+            B.lenArr[1] = B.ptArr[1].Distance(B.ptArr[2]);
+            B.lenArr[2] = B.ptArr[2].Distance(B.ptArr[0]); //邊長計算。
+
+            Q.lenArr[0] = A.lenArr[0];
+            Q.lenArr[1] = A.lenArr[1];
+            Q.lenArr[2] = B.lenArr[0];
+            Q.lenArr[3] = B.lenArr[1];
+            Q.lenArr[4] = A.lenArr[2]; //對角線。
+            Q.lenArr[5] = A.ptArr[1].Distance(B.ptArr[1]);
+
+            Q.angArr = Q.Angle(); //角度計算。
+
+            Q.slopeArr[0] = Q.ptArr[0].Slope(Q.ptArr[1]);
+            Q.slopeArr[1] = Q.ptArr[1].Slope(Q.ptArr[2]);
+            Q.slopeArr[2] = Q.ptArr[2].Slope(Q.ptArr[3]);
+            Q.slopeArr[3] = Q.ptArr[3].Slope(Q.ptArr[0]);
+
+            Q.area = A.Area() + B.Area(); //計算面積。
+
+            //輸出結果。
+            if (Q.Square()) Console.WriteLine("分析結果：正方形");
+            if (Q.Rectangle()) Console.WriteLine("分析結果：長方形");
+            if (Q.Diamond()) Console.WriteLine("分析結果：菱形");
+            if (Q.Parallelogram()) Console.WriteLine("分析結果：平行四邊形");
+            if (Q.Kite()) Console.WriteLine("分析結果：箏形");
+            if (Q.Trapezoid()) Console.WriteLine("分析結果：梯形");
+            if (Q.Irregular()) Console.WriteLine("分析結果：不規則四邊形");
+
+            Console.WriteLine("面積 = {0}", Q.area);
+
+            Console.WriteLine("再次進行分析？(是：Y / 否：N)");
+            Keep = char.Parse(Console.ReadLine());
+            switch (Keep)
+            {
+                case 'Y':
+                    Console.Clear();
+                    goto Repeat;
+                case 'N':
+                    break;
+                default:
+                    Console.WriteLine("Error, ending program.");
+                    break;
+            }
+        }
+
+        class Point
+        {
+            public double xCoord; //X座標。
+            public double yCoord; //Y座標。
+
+            public double Distance(Point target)
+            {
+                double length, x, y;
+                x = this.xCoord - target.xCoord;
+                y = this.yCoord - target.yCoord;
+                length = x * x + y * y;
+                length = Math.Sqrt(length);
+                return length;
+            }
+            public double Slope(Point target)
+            {
+                double slope, x, y;
+                x = this.xCoord - target.xCoord;
+                y = this.yCoord - target.yCoord;
+                slope = y / x;
+                if (x == 0) return 1 / x; //避免正負無窮大異號問題。
+                else return slope;
+            }
+        }
+        class Triangle
+        {
+            public Point[] ptArr = new Point[3]; //ptArr陣列，資料類型為Point。
+            public double[] lenArr = new double[3]; //三邊長。
+                        
+            public double Area() //面積計算，海龍公式。
+            {
+                double area, s;
+                s = (lenArr[0] + lenArr[1] + lenArr[2]) / 2;
+                area = s * (s - lenArr[0]) * (s - lenArr[1]) * (s - lenArr[2]);
+                area = Math.Sqrt(area);
+                return area;
+            }
+        }
+
+        class Quadrilateral
+        {
+            public Point[] ptArr = new Point[4]; //四頂點。
+            public double[] lenArr = new double[6]; //邊長與對角線。
+            public double area; //面積。
+            public double[] angArr = new double[4]; //角度。
+            public double[] slopeArr = new double[4]; //斜率。
+            public double[] Angle() //角度計算，餘弦定理，可直接回傳陣列。
+            {
+                double[] angle = new double[4];
+                angle[0] = lenArr[0] * lenArr[0] + lenArr[3] * lenArr[3] - lenArr[5] * lenArr[5];
+                angle[0] = angle[0] / (2 * lenArr[0] * lenArr[3]);
+                angle[0] = Math.Acos(angle[0]);
+                angle[1] = lenArr[0] * lenArr[0] + lenArr[1] * lenArr[1] - lenArr[4] * lenArr[4];
+                angle[1] = angle[1] / (2 * lenArr[0] * lenArr[1]);
+                angle[1] = Math.Acos(angle[1]);
+                angle[2] = lenArr[1] * lenArr[1] + lenArr[2] * lenArr[2] - lenArr[5] * lenArr[5];
+                angle[2] = angle[2] / (2 * lenArr[1] * lenArr[2]);
+                angle[2] = Math.Acos(angle[2]);
+                angle[3] = lenArr[2] * lenArr[2] + lenArr[3] * lenArr[3] - lenArr[4] * lenArr[4];
+                angle[3] = angle[3] / (2 * lenArr[2] * lenArr[3]);
+                angle[3] = Math.Acos(angle[3]);
+                return angle;
+            }
+            public bool Square() //正方形判別。
+            {
+                double degree90 = 1.5707963267948968;
+                bool len; //四邊長相等。
+                if (lenArr[0] == lenArr[1] && lenArr[1] == lenArr[2] && lenArr[2] == lenArr[3]) len = true;
+                else len = false;
+                if (angArr[0] == degree90 && angArr[1] == degree90 && angArr[2] == degree90 && angArr[3] == degree90 && len) return true;
+                else return false; //四直角。
+            }
+            public bool Rectangle() //長方形判別。
+            {
+                double degree90 = 1.5707963267948968;
+                bool len; //對邊等長臨邊不等。
+                if (lenArr[0] == lenArr[2] && lenArr[1] == lenArr[3] && lenArr[2] != lenArr[3]) len = true;
+                else len = false;
+                bool angle; //四直角。
+                if (angArr[0] == degree90 && angArr[1] == degree90 && angArr[2] == degree90 && angArr[3] == degree90) angle = true;
+                else angle = false;
+                if (angle && len) return true;
+                else return false;
+            }
+            public bool Diamond() //菱形判別。
+            {
+                bool len; //四邊長相等。
+                if (lenArr[0] == lenArr[1] && lenArr[1] == lenArr[2] && lenArr[2] == lenArr[3]) len = true;
+                else len = false;
+                bool angle; //對角相等臨角不等。
+                if (angArr[0] == angArr[2] && angArr[1] == angArr[3] && angArr[0] != angArr[1]) angle = true;
+                else angle = false;
+                if (angle && len) return true;
+                else return false;
+            }
+            public bool Parallelogram() //平行四邊形判別。
+            {
+                bool len; //對邊等長臨邊不等。
+                if (lenArr[0] == lenArr[2] && lenArr[1] == lenArr[3] && lenArr[2] != lenArr[3]) len = true;
+                else len = false;
+                bool angle; //對角相等臨角不等。
+                if (angArr[0] == angArr[2] && angArr[1] == angArr[3] && angArr[0] != angArr[1]) angle = true;
+                else angle = false;
+                if (angle && len) return true;
+                else return false;
+            }
+            public bool Trapezoid() //梯形判別。
+            {
+                bool true1; //一對邊斜率相等，另一對邊斜率不等。
+                if (slopeArr[0] == slopeArr[2] && slopeArr[1] != slopeArr[3]) true1 = true;
+                else true1 = false;
+                bool true2;
+                if (slopeArr[0] != slopeArr[2] && slopeArr[1] == slopeArr[3]) true2 = true;
+                else true2 = false;
+                if (true1 || true2) return true;
+                else return false;
+            }
+            public bool Kite() //箏形判別。
+            {
+                bool len1; //兩對鄰邊相等。
+                if (lenArr[0] == lenArr[1] && lenArr[2] == lenArr[3] && lenArr[1] != lenArr[2]) len1 = true;
+                else len1 = false;
+                bool angle1; //一對對角相等。
+                if (angArr[0] == angArr[2]) angle1 = true;
+                else angle1 = false;
+                bool len2;
+                if (lenArr[1] == lenArr[2] && lenArr[0] == lenArr[3] && lenArr[2] != lenArr[3]) len2 = true;
+                else len2 = false;
+                bool angle2;
+                if (angArr[1] == angArr[3]) angle2 = true;
+                else angle2 = false;
+                bool true1 = len1 & angle1;
+                bool true2 = len2 & angle2;
+                if (true1 || true2) return true;
+                else return false;
+            }
+            public bool Irregular() //不規則四邊形判別。
+            {
+                bool slope; //斜率皆不同。
+                if (slopeArr[0] != slopeArr[1] && slopeArr[0] != slopeArr[2] && slopeArr[0] != slopeArr[3] && slopeArr[1] != slopeArr[2] && slopeArr[1] != slopeArr[3] && slopeArr[2] != slopeArr[3]) slope = true;
+                else slope = false;
+                bool len1;
+                if (lenArr[0] == lenArr[1] && lenArr[2] == lenArr[3] && lenArr[1] != lenArr[2]) len1 = false; //是箏形為False。
+                else len1 = true;
+                bool len2;
+                if (lenArr[1] == lenArr[2] && lenArr[0] == lenArr[3] && lenArr[2] != lenArr[3]) len2 = false;
+                else len2 = true;
+                if (slope && len1 && len2) return true;
+                else return false;
+            }
+        }
+    }
+}
