@@ -1,0 +1,146 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Quiz4
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Triangle A = new Triangle();
+            A.ptArr[0] = new Point();
+            A.ptArr[1] = new Point();
+            A.ptArr[2] = new Point(); //初始化。
+            string S;
+            string[] Temp; //字串陣列宣告。
+            Temp = new string[2]; //配置記憶體及宣告長度。
+            char Keep;
+            while (true)
+            {
+                Console.WriteLine("=====三角形特性分析====="); //標題，WriteLine自動換行。
+                Console.WriteLine("輸入座標點。(以空格分隔)");
+                Console.Write("(X1, Y1) = "); //讀入座標，Write不換行。
+                S = Console.ReadLine(); //讀入字串。            
+                Temp = S.Split(' '); //以空格分割讀入字串。
+                A.ptArr[0].Coord[0] = double.Parse(Temp[0]); //進行資料轉換。
+                A.ptArr[0].Coord[1] = double.Parse(Temp[1]);
+                Console.Write("(X2, Y2) = ");
+                S = Console.ReadLine(); //讀入字串。
+                Temp = S.Split(' '); //分割字串。
+                A.ptArr[1].Coord[0] = double.Parse(Temp[0]);
+                A.ptArr[1].Coord[1] = double.Parse(Temp[1]);
+                Console.Write("(X3, Y3) = ");
+                S = Console.ReadLine();
+                Temp = S.Split(' ');
+                A.ptArr[2].Coord[0] = double.Parse(Temp[0]);
+                A.ptArr[2].Coord[1] = double.Parse(Temp[1]); //讀入結束。
+                if (A.ptArr[0].Slope(A.ptArr[1]) == A.ptArr[0].Slope(A.ptArr[2])) //錯誤判讀，斜率相等。
+                {
+                    Console.WriteLine("此三點無法構成三角形。");
+                    goto GoOn;
+                }
+                A.lenArr[0] = A.ptArr[0].Distance(A.ptArr[1]);
+                A.lenArr[1] = A.ptArr[1].Distance(A.ptArr[2]);
+                A.lenArr[2] = A.ptArr[2].Distance(A.ptArr[0]); //邊長計算。
+                A.angArr = A.Angle(); //角度計算。
+                A.area = A.Area();
+                A.radius = A.OuterRadius();
+                Console.WriteLine("周長 = {0}", A.lenArr[0] + A.lenArr[1] + A.lenArr[2]);
+                Console.WriteLine("面積 = {0}", A.area);
+                Console.WriteLine("外接圓半徑 = {0}", A.radius);
+                if (A.Right()) Console.WriteLine("是直角三角形。");
+                else Console.WriteLine("非直角三角形。");
+                GoOn:;
+                Console.WriteLine("再次進行驗證？(是：Y / 否：N)");
+                Keep = char.Parse(Console.ReadLine());
+                switch (Keep)
+                {
+                    case 'Y':
+                        Console.Clear();
+                        break;
+                    case 'N':
+                        goto End;
+                    default:
+                        Console.WriteLine("Error, ending program.");
+                        goto End;
+                }
+            }
+        End:;
+            Console.ReadKey();
+        }
+        class Point
+        {
+            public double[] Coord = new double[2]; //座標點。
+            public double Distance(Point target)
+            {
+                double length, x, y;
+                x = this.Coord[0] - target.Coord[0];
+                y = this.Coord[1] - target.Coord[1];
+                length = x * x + y * y;
+                length = Math.Sqrt(length);
+                return length;
+            }
+            public double Slope(Point target)
+            {
+                double slope, x, y;
+                x = this.Coord[0] - target.Coord[0];
+                y = this.Coord[1] - target.Coord[1];
+                slope = y / x;
+                if (x == 0) return 1 / x; //避免正負無窮大異號問題。
+                else return slope;
+            }
+        }
+        class Triangle //類別宣告。
+        {
+            public Point[] ptArr = new Point[3]; //ptArr陣列，資料類型為Point。
+            public double[] lenArr = new double[3]; //三邊長。
+            public double[] angArr = new double[3]; //角度。
+            public double area; //面積。
+            public double radius; //外接圓半徑。
+
+
+            public double Area() //面積計算，海龍公式。
+            {
+                double area;
+                double s;
+                s = (lenArr[0] + lenArr[1] + lenArr[2]) / 2;
+                area = s * (s - lenArr[0]) * (s - lenArr[1]) * (s - lenArr[2]);
+                area = Math.Sqrt(area);
+                return area;
+            }
+
+            public double[] Angle() //角度計算，餘弦定理，可直接回傳陣列。
+            {
+                double[] angle = new double[3];
+                angle[0] = lenArr[1] * lenArr[1] + lenArr[2] * lenArr[2] - lenArr[0] * lenArr[0];
+                angle[0] = angle[0] / (2 * lenArr[1] * lenArr[2]);
+                angle[0] = Math.Acos(angle[0]);
+                angle[1] = lenArr[0] * lenArr[0] + lenArr[2] * lenArr[2] - lenArr[1] * lenArr[1];
+                angle[1] = angle[1] / (2 * lenArr[0] * lenArr[2]);
+                angle[1] = Math.Acos(angle[1]);
+                angle[2] = lenArr[1] * lenArr[1] + lenArr[0] * lenArr[0] - lenArr[2] * lenArr[2];
+                angle[2] = angle[2] / (2 * lenArr[1] * lenArr[0]);
+                angle[2] = Math.Acos(angle[2]);
+                return angle;
+            }
+
+            public double OuterRadius() //角度計算，餘弦定理。
+            {
+                double radius;
+                double s;
+                s = lenArr[0] * lenArr[1] * lenArr[2] / 4;
+                radius = s / area;
+                return radius;
+            }
+
+            public bool Right() //直角判別。
+            {
+                if (angArr[0] == Math.PI / 2 || angArr[1] == Math.PI / 2 || angArr[2] == Math.PI / 2) return true;
+                else return false;
+            }
+        }
+    }
+}
