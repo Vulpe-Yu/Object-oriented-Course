@@ -6,7 +6,7 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            Triangle A = new Triangle();
+            Quadrilateral A = new Quadrilateral();
             string S;
             string[] Temp; //字串陣列宣告。
             Temp = new string[2]; //配置記憶體及宣告長度。
@@ -72,7 +72,7 @@ namespace ConsoleApp1
             }
         }
 
-        class Triangle //類別宣告。
+        class Quadrilateral //類別宣告。
         {
             public double x1;
             public double y1;
